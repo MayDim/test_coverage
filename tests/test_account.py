@@ -6,6 +6,7 @@ from random import randrange
 from unittest import TestCase
 from models import db
 from models.account import Account, DataValidationError
+from models import app
 
 ACCOUNT_DATA = {}
 
@@ -27,6 +28,7 @@ class TestAccountModel(TestCase):
 
     def setUp(self):
         """Truncate the tables"""
+        app.app_context().push
         self.rand = randrange(0, len(ACCOUNT_DATA))
         db.session.query(Account).delete()
         db.session.commit()
