@@ -6,6 +6,7 @@ from random import randrange
 from unittest import TestCase
 from models import db, app
 from models.account import Account, DataValidationError
+import datetime
 
 ACCOUNT_DATA = {}
 
@@ -72,13 +73,19 @@ class TestAccountModel(TestCase):
         self.assertEqual(account.date_joined, result["date_joined"])
     
     def test_from_dict(self):
-        data = ACCOUNT_DATA[self.rand]
-        account = Account(**data)
-        result = account.from_dict()
-        self.assertEqual(account.name, result["name"])
-        self.assertEqual(account.email, result["email"])
-        self.assertEqual(account.phone_number, result["phone_number"])
-        self.assertEqual(account.disabled, result["disabled"])
-        self.assertEqual(account.date_joined, result["date_joined"])
+        """ Test creating an Account from a dictionary """
+        data = ACCOUNT_DATA[self.rand]  # Get a random account data dictionary
+        original_account = Account(**data)  # Create an Account object from the data
+
+        # Convert the Account object back to a dictionary using from_dict
+        new_account = Account()
+        new_account.from_dict(original_account.to_dict())
+
+        # Check if the attributes of the original and new accounts match
+        self.assertEqual(original_account.name, new_account.name)
+        self.assertEqual(original_account.email, new_account.email)
+        self.assertEqual(original_account.phone_number, new_account.phone_number)
+        self.assertEqual(original_account.disabled, new_account.disabled)
+        self.assertEqual(original_account.date_joined, new_account.date_joined)
         
 
