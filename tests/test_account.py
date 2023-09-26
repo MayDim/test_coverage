@@ -15,7 +15,7 @@ class TestAccountModel(TestCase):
     @classmethod
     def setUpClass(cls):
         """ Load data needed by tests """
-        app.app_context().push
+        app.app_context().push()
         db.create_all()  # make our sqlalchemy tables
         global ACCOUNT_DATA
         with open('tests/fixtures/account_data.json') as json_data:
