@@ -70,4 +70,15 @@ class TestAccountModel(TestCase):
         self.assertEqual(account.phone_number, result["phone_number"])
         self.assertEqual(account.disabled, result["disabled"])
         self.assertEqual(account.date_joined, result["date_joined"])
+    
+    def test_from_dict(self):
+        data = ACCOUNT_DATA[self.rand]
+        account = Account(**data)
+        result = account.from_dict()
+        self.assertEqual(account.name, result["name"])
+        self.assertEqual(account.email, result["email"])
+        self.assertEqual(account.phone_number, result["phone_number"])
+        self.assertEqual(account.disabled, result["disabled"])
+        self.assertEqual(account.date_joined, result["date_joined"])
+        
 
