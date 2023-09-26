@@ -87,5 +87,59 @@ class TestAccountModel(TestCase):
         self.assertEqual(original_account.phone_number, new_account.phone_number)
         self.assertEqual(original_account.disabled, new_account.disabled)
         self.assertEqual(original_account.date_joined, new_account.date_joined)
+
+    def test_update(self):
+        """ Test for updating an account in the database"""
+        data = ACCOUNT_DATA[self.rand]  # Get a random account data dictionary
+        account = Account(**data)  # Create an Account object from the data
+
+        # Create the account in the database
+        account.create()
+
+        # Modify some attributes of the account
+        updated_name = "Updated Name"
+        updated_email = "updated@example.com"
+        account.name = updated_name
+        account.email = updated_email
+
+        # Call the update method to save the changes
+        account.update()
+
+        # Retrieve the updated account from the database
+        updated_account = Account.find(account.id)
+
+        # Check if the attributes have been updated correctly
+        self.assertEqual(updated_account.name, updated_name)
+        self.assertEqual(updated_account.email, updated_email)
+
+        # Attempt to call the update method without setting the ID
+        account_without_id = Account(**data)
+
+        with self.assertRaises(DataValidationError) as context:
+            account_without_id.update()
+
+        # Check if the correct exception was raised
+        self.assertEqual(
+            str(context.exception),
+            "Update called with empty ID field"
+        )
+
+
+    def test_delete(self):
+        """ Test deleting an existing Account """
+        data = ACCOUNT_DATA[self.rand]  # Get a random account data dictionary
+        account = Account(**data)  # Create an Account object from the data
+
+        # Create the account in the database
+        account.create()
+
+        # Call the delete method to remove the account
+        account.delete()
+
+        # Attempt to retrieve the deleted account from the database
+        deleted_account = Account.find(account.id)
+
+        # Check if the retrieved account is None, indicating successful deletion
+        self.assertIsNone(deleted_account)
         
 
